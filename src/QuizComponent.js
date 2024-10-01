@@ -1,5 +1,14 @@
 import React, { useEffect, useState } from "react";
 
+const decodeHtmlEntities = (text) => {
+  const element = document.createElement("div");
+  if (text) {
+    element.innerHTML = text;
+    return element.textContent;
+  }
+  return text;
+};
+
 const QuizComponent = () => {
   const [quizData, setQuizData] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -45,13 +54,13 @@ const QuizComponent = () => {
         {quizData && quizData.length > 0 ? (
           quizData.map((question, index) => (
             <li key={index}>
-              <strong>Question {index + 1}:</strong> {question.question}
+              <strong>Question {index + 1}:</strong> {decodeHtmlEntities(question.question)}
               <br />
-              <strong>Correct Answer:</strong> {question.correct_answer}
+              <strong>Correct Answer:</strong> {decodeHtmlEntities(question.correct_answer)}
               <br />
               <strong>Options:</strong>
               <ul>
-                {question.incorrect_answers.concat(question.correct_answer).map((option, i) => (
+                {question.incorrect_answers.concat(decodeHtmlEntities(question.correct_answer)).map((option, i) => (
                   <li key={i}>{option}</li>
                 ))}
               </ul>
