@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react";
+import './QuizComponent.css';
 
 const decodeHtmlEntities = (text) => {
   const element = document.createElement("div");
@@ -13,6 +14,7 @@ const QuizComponent = () => {
   const [quizData, setQuizData] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [selectedAnswers, setSelectedAnswers] = useState({});
 
   const fetchQuizData = async (retryCount = 0) => {
     try {
@@ -39,6 +41,13 @@ const QuizComponent = () => {
     fetchQuizData();
   }, []);
 
+  const handleAnswerClick = (questionIndex, answer) => {
+    setSelectedAnswers((prevAnswers) => ({
+      ...prevAnswers,
+      [questionIndex]: answer
+    }));
+  };
+
   if (loading) {
     return <div>Loading...</div>;
   }
@@ -50,29 +59,40 @@ const QuizComponent = () => {
   return (
     <div>
       <h1>Quiz</h1>
-      <ul>
-        {quizData && quizData.length > 0 ? (
-          quizData.map((question, index) => (
-            <li key={index}>
+      {quizData && quizData.length > 0 ? (
+        quizData.map((question, index) => {
+          const shuffledAnswers = [...question.incorrect_answers, question.correct_answer].sort(() => Math.random() - 0.5);
+          return (
+            <div key={index}>
               <strong>Question {index + 1}:</strong> {decodeHtmlEntities(question.question)}
               <br />
-              <strong>Correct Answer:</strong> {decodeHtmlEntities(question.correct_answer)}
-              <br />
-              <strong>Options:</strong>
-              <ul>
-                {question.incorrect_answers.concat(decodeHtmlEntities(question.correct_answer)).map((option, i) => (
-                  <li key={i}>{option}</li>
+              <div className="question-container">
+                {shuffledAnswers.map((option, i) => (
+                  <button 
+                    key={i}
+                    onClick={() => handleAnswerClick(index, option)}
+                    disabled={selectedAnswers[index] !== undefined}
+                    className="quiz-button"
+                  >
+                    {decodeHtmlEntities(option)}
+                  </button>
                 ))}
-              </ul>
-            </li>
-          ))
-        ) : (
-          <li>No quiz data available</li>
-        )}
-      </ul>
+              </div>
+              {selectedAnswers[index] && (
+                <div>
+                  {selectedAnswers[index] === question.correct_answer
+                    ? <span className="correct-answer">Correct!</span>
+                    : <span className="wrong-answer">Wrong! The correct answer is {question.correct_answer}</span>}
+                </div>
+              )}
+            </div>
+          );
+        })
+      ) : (
+        <div>No quiz data available</div>
+      )}
     </div>
   );
 };
 
 export default QuizComponent;
-

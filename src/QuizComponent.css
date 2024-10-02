@@ -1,0 +1,25 @@
+.quiz-button {
+    display: block;
+    margin: 5px 0;
+    padding: 10px;
+    background-color: #f0f0f0;
+    border: 1px solid #ccc;
+    cursor: pointer;
+}
+
+.quiz-button:disabled {
+    background-color: #ddd;
+    cursor: not-allowed;
+}
+
+.question-container {
+    margin: 10px 0;
+}
+
+.correct-answer {
+    color: green;
+}
+
+.wrong-answer {
+    color: red;
+}
