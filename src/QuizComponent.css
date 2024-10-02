@@ -5,6 +5,7 @@
     background-color: #f0f0f0;
     border: 1px solid #ccc;
     cursor: pointer;
+    width: 6rem;
 }
 
 .quiz-button:disabled {
@@ -14,6 +15,9 @@
 
 .question-container {
     margin: 10px 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
 }
 
 .correct-answer {
